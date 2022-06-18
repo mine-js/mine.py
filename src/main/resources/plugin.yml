@@ -1,7 +1,15 @@
-name: ${pluginName}
-version: ${version}
-main: ${group}.${packageName}.plugin.${pluginName}Plugin
+name: minepy
+version: 0.0.1
+main: xyz.minejs.minepy.MinePyPlugin
 api-version: 1.18
 libraries:
   - org.jetbrains.kotlin:kotlin-stdlib:1.6.10
   - org.jetbrains.kotlin:kotlin-reflect:1.6.10
+  - org.python:jython:2.7.2
+commands:
+  pyreload:
+    description: Reload Python Main Script
+    permission: py.reload
+permissions:
+  py.reload:
+    description: Permission to use /pyreload
