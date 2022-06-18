@@ -1,16 +1,121 @@
-# Paper plugin sample (Kotlin)
+# Mine.py
 
-[![Kotlin](https://img.shields.io/badge/java-17.0.2-ED8B00.svg?logo=java)](https://www.azul.com/)
-[![Kotlin](https://img.shields.io/badge/kotlin-1.6.10-585DEF.svg?logo=kotlin)](http://kotlinlang.org)
-[![Gradle](https://img.shields.io/badge/gradle-7.2-02303A.svg?logo=gradle)](https://gradle.org)
-[![GitHub](https://img.shields.io/github/license/monun/paper-sample)](https://www.gnu.org/licenses/gpl-3.0.html)
-[![Kotlin](https://img.shields.io/badge/youtube-각별-red.svg?logo=youtube)](https://www.youtube.com/channel/UCDrAR1OWC2MD4s0JLetN0MA)
+A python scripting plugin for bukkit!
 
-### Suggested libraries
-* #### `io.github.monun:tap` [![Maven Central](https://img.shields.io/maven-central/v/io.github.monun/tap)](https://search.maven.org/artifact/io.github.monun/tap/)
-* #### `io.github.monun:invfx` [![Maven Central](https://img.shields.io/maven-central/v/io.github.monun/invfx)](https://search.maven.org/artifact/io.github.monun/invfx/)
-* #### `io.github.monun:kommand-api` [![Maven Central](https://img.shields.io/maven-central/v/io.github.monun/kommand-api)](https://search.maven.org/artifact/io.github.monun/kommand-api/)
-* #### `io.github.monun:kommand-core` [![Maven Central](https://img.shields.io/maven-central/v/io.github.monun/kommand-core)](https://search.maven.org/artifact/io.github.monun/kommand-core/)
-* #### `org.jetbrains.exposed:exposed-core` [![Maven Central](https://img.shields.io/maven-central/v/org.jetbrains.exposed/exposed-core)](https://search.maven.org/artifact/org.jetbrains.exposed/exposed-core/)
-* #### `org.jetbrains.kotlinx:kotlinx-coroutines-core` [![Maven Central](https://img.shields.io/maven-central/v/org.jetbrains.kotlinx/kotlinx-coroutines-core)](https://search.maven.org/artifact/org.jetbrains.kotlinx/kotlinx-coroutines-core/)
-* #### `io.github.monun:heartbeat-coroutines` [![Maven Central](https://img.shields.io/maven-central/v/io.github.monun/heartbeat-coroutines)](https://search.maven.org/artifact/io.github.monun/heartbeat-coroutines/)
+## Commands
+
+### `/pyreload`
+Execute `end()` on loaded scripts, and reload scripts on `plugins/minepy`!
+#### Required Permission: `py.reload`
+
+## Mine.py API
+
+### MPy
+
+#### Methods
+
+##### `getPlugin(): JavaPlugin`
+
+Get MinePyPlugin's main instance
+
+###### Examples
+```python
+from minepy import MPy
+plugin = MPy.getPlugin() # <--
+```
+
+### Events
+
+#### Methods
+
+##### `registerListener(eventClazz: Class, priority: EventPriority, ignoreCancelled: bool, listener: Function): Listener`
+
+Register event's listener! Must be call `unregisterListener` with returned value in this function!
+
+###### Examples
+```python
+from minepy import Events
+from minepy import Events
+from java.lang import Class
+
+def onMove(event):
+    event.player.sendMessage('Moved!')
+
+PlayerMoveEvent = Class.forName('org.bukkit.event.player.PlayerMoveEvent')
+listenerMove = Events.registerListener(PlayerMoveEvent, EventPriority.NORMAL, False, onMove) # <--
+
+def end():
+    Events.unregisterListener(PlayerMoveEvent, listenerMove)
+    print('End')
+```
+
+##### `unregisterListener(eventClazz: Class, listener: Listener)`
+
+Unregister listener with event(eventClazz)!
+
+###### Examples
+```python
+from minepy import Events
+from minepy import Events
+from java.lang import Class
+
+def onMove(event):
+    event.player.sendMessage('Moved!')
+
+PlayerMoveEvent = Class.forName('org.bukkit.event.player.PlayerMoveEvent')
+listenerMove = Events.registerListener(PlayerMoveEvent, EventPriority.NORMAL, False, onMove)
+
+def end():
+    Events.unregisterListener(PlayerMoveEvent, listenerMove) # <---
+    print('End')
+```
+
+## Example Codes
+
+### Importing java classes
+```python
+from org.bukkit import Bukkit
+
+Bukkit.broadcastMessage('Test')
+```
+
+### Registering event handlers
+```python
+from minepy import Events
+from java.lang import Class
+
+def onMove(event):
+    event.player.sendMessage('Moved!')
+
+PlayerMoveEvent = Class.forName('org.bukkit.event.player.PlayerMoveEvent')
+listenerMove = Events.registerListener(PlayerMoveEvent, EventPriority.NORMAL, False, onMove)
+
+def end():
+    Events.unregisterListener(PlayerMoveEvent, listenerMove)
+    print('End')
+```
+
+## Example Code
+```python
+from java.lang import Class
+from org.bukkit.event import EventPriority
+from minepy import Events
+from minepy import MPy
+from org.bukkit.potion import PotionEffect
+from org.bukkit.potion import PotionEffectType
+from org.bukkit import Bukkit
+
+def onChat(event):
+    def pot():
+        pos = event.player.getLocation().add(0.0, 1.0, 0.0)
+        event.player.teleport(pos)
+        event.player.addPotionEffect(PotionEffect(PotionEffectType.SPEED, 20 * 5, 5, False, False))
+    Bukkit.getScheduler().scheduleSyncDelayedTask(MPy.getPlugin(), pot)
+
+AsyncChatEvent = Class.forName('io.papermc.paper.event.player.AsyncChatEvent')
+listenerChat = Events.registerListener(AsyncChatEvent, EventPriority.NORMAL, False, onChat)
+
+def end():
+    Events.unregisterListener(AsyncChatEvent, listenerChat)
+    print("Ending!")
+```
