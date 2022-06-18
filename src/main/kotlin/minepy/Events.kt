@@ -1,4 +1,4 @@
-package xyz.minejs.minepy
+package minepy
 
 import org.bukkit.Bukkit
 import org.bukkit.event.*

@@ -14,7 +14,7 @@ class MinePyPlugin: JavaPlugin() {
 
     override fun onEnable() {
         plugin = this
-        Class.forName("xyz.minejs.minepy.Events")
+        Class.forName("minepy.Events")
         val props = Properties()
         props.setProperty("python.path", Paths.get(".").toAbsolutePath().normalize().toString())
         props.setProperty("python.import.site", "false")
